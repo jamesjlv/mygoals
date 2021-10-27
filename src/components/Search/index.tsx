@@ -1,6 +1,10 @@
 import { Flex, Input, Text, Stack, Grid, Spinner, Icon } from '@chakra-ui/react';
 import { IoSearchOutline } from 'react-icons/io5';
-export function Search() {
+interface SearchProps {
+  filter: (string) => void;
+}
+
+export function Search({ filter }: SearchProps) {
   return (
     <Flex
       flexDirection="column"
@@ -26,6 +30,7 @@ export function Search() {
           borderColor="gray.700"
           placeholder="Buscar uma meta..."
           paddingLeft="3rem"
+          onChange={(e) => filter(e.target.value)}
         />
       </Flex>
     </Flex>

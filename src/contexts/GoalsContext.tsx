@@ -26,7 +26,7 @@ export const GoalsContext = createContext({} as GoalsProviderProps);
 
 export function GoalsContextProvider({ children }: GoalsContextProps) {
   const [selectedGoal, setSelectedGoal] = useState<SelectedGoalData>();
-  console.log(selectedGoal);
+
   function handleGoalsData(data: SelectedGoalData): void {
     setSelectedGoal(data);
     return;

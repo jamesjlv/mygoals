@@ -14,7 +14,7 @@ import { Button } from '../Button';
 import { Input } from '../Form/Input';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { GoalsContext } from '../../contexts/GoalsContext';
 
 interface FormGoalProps {
@@ -42,6 +42,7 @@ const createGoalSchema = yup.object().shape({
 
 export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
   const { selectedGoal } = useContext(GoalsContext);
+  const [stateForm, setStateForm] = useState(false);
 
   const {
     register,
@@ -51,16 +52,17 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
   } = useForm({
     resolver: yupResolver(createGoalSchema),
   });
-
   const handleCreateGoal: SubmitHandler<CreateGoalData> = async (values) => {
+    setStateForm(true);
     return new Promise<void>(async (resolve) => {
       resolve();
-      await fetch('http://localhost:3000/api/create', {
+      await fetch('http://localhost:3000/api/goal', {
         method: 'POST',
         body: JSON.stringify(values),
       });
       handleClose();
       reset();
+      setStateForm(false);
     });
   };
 
@@ -68,6 +70,7 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
     handleClose();
     reset();
   }
+
   return (
     <Modal isOpen={isOpen} onClose={handleResetForm}>
       <ModalOverlay />
@@ -125,7 +128,7 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
               color="pink.600"
               width="100%"
               type="submit"
-              isLoading={isSubmitting}
+              isLoading={stateForm}
             />
           </Flex>
         </ModalBody>

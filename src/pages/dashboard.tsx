@@ -1,16 +1,17 @@
-import { Flex, Spinner, useDisclosure } from '@chakra-ui/react';
-import { getSession } from 'next-auth/client';
-import { useContext, useState } from 'react';
+import { Flex, useDisclosure } from '@chakra-ui/react';
+import { getSession, useSession } from 'next-auth/client';
+import { useEffect, useState } from 'react';
 import { SideBar } from '../components/SideBar';
 import { SyncUserGoals } from '../services/SyncUserGoals';
 import { DashBoard } from '../components/DashBoard';
 import { GetServerSideProps } from 'next';
 import { FormGoal } from '../components/FormGoal';
-import { GoalsContext } from '../contexts/GoalsContext';
 
 type GoalsData = {
   description: string;
+  ref: string;
   goals: {
+    ref: string;
     category_description: string;
     days: number;
     daysCompleted: number;
@@ -23,6 +24,14 @@ type GoalsData = {
   }[];
 }[];
 
+interface SyncUserGoalsProps {
+  id?: string;
+  user?: {
+    email?: string;
+    name?: string;
+    image?: string;
+  };
+}
 interface DashboardProps {
   goals_data: GoalsData;
 }
@@ -30,11 +39,21 @@ interface DashboardProps {
 export default function Dashboard({ goals_data }: DashboardProps) {
   const [goals, setGoals] = useState<GoalsData>(goals_data);
   const { isOpen, onClose, onOpen } = useDisclosure();
-
-  function handleClose(): void {
+  const [session, loading] = useSession();
+  async function handleClose(): Promise<void> {
     onClose();
     return;
   }
+
+  async function handleSyncGoals() {
+    const goalsSync = await SyncUserGoals(session);
+    setGoals(goalsSync);
+    return;
+  }
+
+  useEffect(() => {
+    handleSyncGoals();
+  }, [isOpen]);
 
   return (
     <Flex flexDirection="row" w="100vw" h="100vh">
@@ -67,6 +86,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   return {
     props: {
       goals_data: data,
+      session: session,
     },
   };
 };

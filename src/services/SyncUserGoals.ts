@@ -78,6 +78,8 @@ type GoalsDataReturn = {
   description: string;
   ref: string;
   goals: {
+    ref: string;
+    category_description: string;
     days: number;
     daysCompleted: number;
     description: string;
