@@ -9,23 +9,33 @@ export default function Home() {
           color="pink.500"
           textAlign="center"
           width="100%"
-          fontSize="3rem"
+          fontSize={['2rem', '3rem']}
           textShadow="0px 0px 5px #C4244D"
         >
           MINHAS METAS
         </Heading>
       </Flex>
-      <Flex w="100%" alignItems="center" justifyContent="center" flexDir="column" height="100%">
+      <Flex
+        w="100%"
+        alignItems="center"
+        justifyContent="center"
+        flexDir="column"
+        height={['50%', '100%']}
+      >
         <Flex
-          width="100%"
+          width={['90%', '100%']}
           maxWidth="30rem"
           bg="gray.800"
-          padding="3rem 2rem"
+          padding={['2rem 2rem', '3rem 2rem']}
           m="0 auto"
           flexDir="column"
           borderRadius="0.2rem"
         >
-          <Heading alignSelf="center" fontSize="1.5rem" marginBottom="3.2rem">
+          <Heading
+            alignSelf="center"
+            fontSize={['1rem', '1.5rem']}
+            marginBottom={['2rem', '3.2rem']}
+          >
             Acesse sua conta
           </Heading>
           <Stack spacing="4">

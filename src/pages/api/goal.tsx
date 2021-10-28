@@ -87,11 +87,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       } catch (error) {
         console.log(error);
       }
-    } else if (ref !== '') {
+    } else {
       console.log({ quantity, description, category, ref });
     }
 
-    return res.status(200);
+    return res.status(200).json({ sessionId: session });
   } else {
     res.setHeader('Allow', 'POST');
     res.status(405).end('Method not Allowed');

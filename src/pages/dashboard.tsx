@@ -6,6 +6,9 @@ import { SyncUserGoals } from '../services/SyncUserGoals';
 import { DashBoard } from '../components/DashBoard';
 import { GetServerSideProps } from 'next';
 import { FormGoal } from '../components/FormGoal';
+import { useBreakpointValue } from '@chakra-ui/react';
+import { Slide } from '@chakra-ui/transition';
+import { HamburgerIcon } from '@chakra-ui/icons';
 
 type GoalsData = {
   description: string;
@@ -40,6 +43,9 @@ export default function Dashboard({ goals_data }: DashboardProps) {
   const [goals, setGoals] = useState<GoalsData>(goals_data);
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [session, loading] = useSession();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const isMobile = useBreakpointValue({ base: true, md: true, lg: true, xl: false });
+
   async function handleClose(): Promise<void> {
     onClose();
     return;
@@ -57,11 +63,37 @@ export default function Dashboard({ goals_data }: DashboardProps) {
 
   return (
     <Flex flexDirection="row" w="100vw" h="100vh">
-      {goals[0] && (
+      {goals[0] ? (
         <>
-          <SideBar goals={goals} onOpen={onOpen} />
+          {isMobile ? (
+            <>
+              <HamburgerIcon
+                marginTop="1rem"
+                marginLeft="1rem"
+                position="absolute"
+                fontSize="1.5rem"
+                onClick={() => setIsMenuOpen(true)}
+                zIndex="1"
+              />
+              <Slide direction="left" in={isMenuOpen} style={{ zIndex: 10 }}>
+                <SideBar goals={goals} onOpen={onOpen} closeMobile={setIsMenuOpen} />
+              </Slide>
+            </>
+          ) : (
+            <>
+              <SideBar goals={goals} onOpen={onOpen} />
+            </>
+          )}
+
           <Flex flexDirection="column" width="100%">
             <DashBoard onOpen={onOpen} />
+            <FormGoal isOpen={isOpen} handleClose={handleClose} />
+          </Flex>
+        </>
+      ) : (
+        <>
+          <SideBar goals={goals} onOpen={onOpen} />{' '}
+          <Flex flexDirection="column" width="100%">
             <FormGoal isOpen={isOpen} handleClose={handleClose} />
           </Flex>
         </>

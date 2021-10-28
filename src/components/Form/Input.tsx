@@ -20,9 +20,9 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
   ref
 ) => {
   return (
-    <FormControl isInvalid={!!error} marginTop="1rem">
+    <FormControl isInvalid={!!error} marginTop={['.8rem', '1rem']}>
       {!!label && (
-        <FormLabel htmlFor={name} color="gray.500">
+        <FormLabel htmlFor={name} color="gray.500" fontSize={['.8rem', '1rem']}>
           {label}
         </FormLabel>
       )}
@@ -41,7 +41,7 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
         _placeholder={{
           color: 'gray.400',
         }}
-        size="lg"
+        size={'md'}
         {...register(name, { required: req })}
         {...rest}
       />

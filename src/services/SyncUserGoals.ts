@@ -112,8 +112,14 @@ function goalsObjectFiltered(goalsFilter: GoalsData, catId: string, goalReports:
         description: goal.data.description,
         end_date: goal.data.end_date,
         start_date: goal.data.start_date,
-        days: differenceInDays(new Date(goal.data.end_date), new Date(goal.data.start_date)),
-        daysCompleted: differenceInDays(Date.now(), new Date(goal.data.start_date)),
+        days: differenceInDays(
+          new Date(goal?.data?.end_date.split(',').join('/')),
+          new Date(goal?.data?.start_date.split(',').join('/'))
+        ),
+        daysCompleted: differenceInDays(
+          Date.now(),
+          new Date(goal.data.start_date.split(',').join('/'))
+        ),
         report_type: goal.data.report_type,
         category: goal.data.category,
         reports: reportsFiltered(goalReports, goal.ref.value.id),
@@ -162,8 +168,8 @@ export const SyncUserGoals = async (session: SyncUserGoalsProps) => {
           q.Lambda('X', q.Get(q.Var('X')))
         )
       );
-
       const goalsFormatted = await formattedGoals({ goals, category, goalsReports });
+
       return goalsFormatted;
     }
   }

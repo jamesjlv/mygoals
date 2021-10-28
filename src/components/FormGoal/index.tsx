@@ -37,7 +37,7 @@ const createGoalSchema = yup.object().shape({
   ref: yup.string(),
   description: yup.string().required('Descrição obrigatória'),
   category: yup.string().required('Informe uma categoria'),
-  quantity: yup.number().required('Informe os dias'),
+  quantity: yup.number().required('Informe os dias').typeError('Apenas numeros'),
 });
 
 export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
@@ -56,7 +56,7 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
     setStateForm(true);
     return new Promise<void>(async (resolve) => {
       resolve();
-      await fetch('http://localhost:3000/api/goal', {
+      await fetch('./api/goal', {
         method: 'POST',
         body: JSON.stringify(values),
       });
@@ -74,8 +74,13 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
   return (
     <Modal isOpen={isOpen} onClose={handleResetForm}>
       <ModalOverlay />
-      <ModalContent bg="gray.800">
-        <ModalHeader fontWeight="bold" align="center" color="pink.500" fontSize="1.5rem">
+      <ModalContent bg="gray.800" width={['90%', '100%']}>
+        <ModalHeader
+          fontWeight="bold"
+          align="center"
+          color="pink.500"
+          fontSize={['1.2rem', '1.5rem']}
+        >
           {selectedGoal?.description ? 'Editar meta' : 'Cadastrar nova meta'}
         </ModalHeader>
         <ModalCloseButton />
@@ -111,7 +116,7 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
               register={register}
               error={errors.category}
             />
-            <Text marginTop="1rem" fontWeight="500" color="gray.500">
+            <Text marginTop="1rem" fontWeight="500" color="gray.500" fontSize={['.8rem', '1rem']}>
               Em quantos dias você deseja concluir a meta?
             </Text>
             <Flex flexDirection="row" width="30%" marginBottom="2rem">

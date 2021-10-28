@@ -35,7 +35,7 @@ export function SignInButton({ provider }: SignInButtonProps) {
       {loading || session?.user ? (
         <Spinner />
       ) : (
-        <Flex>
+        <Flex fontSize={['.8rem', '1rem']}>
           {provider === 'Google' && <FcGoogle style={{ marginRight: '1rem' }} />}
           <a>Acesse com {provider}</a>
         </Flex>
