@@ -1,4 +1,4 @@
-import { Flex, useDisclosure } from '@chakra-ui/react';
+import { Flex, useDisclosure, Img } from '@chakra-ui/react';
 import { getSession, useSession } from 'next-auth/client';
 import { useEffect, useState } from 'react';
 import { SideBar } from '../components/SideBar';
@@ -9,6 +9,7 @@ import { FormGoal } from '../components/FormGoal';
 import { useBreakpointValue } from '@chakra-ui/react';
 import { Slide } from '@chakra-ui/transition';
 import { HamburgerIcon } from '@chakra-ui/icons';
+import { Button } from '../components/Button';
 
 type GoalsData = {
   description: string;
@@ -59,6 +60,7 @@ export default function Dashboard({ goals_data }: DashboardProps) {
 
   useEffect(() => {
     handleSyncGoals();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   return (
@@ -92,8 +94,30 @@ export default function Dashboard({ goals_data }: DashboardProps) {
         </>
       ) : (
         <>
-          <SideBar goals={goals} onOpen={onOpen} />{' '}
-          <Flex flexDirection="column" width="100%">
+          {isMobile ? (
+            <>
+              <HamburgerIcon
+                marginTop="1rem"
+                marginLeft="1rem"
+                position="absolute"
+                fontSize="1.5rem"
+                onClick={() => setIsMenuOpen(true)}
+                zIndex="1"
+              />
+              <Slide direction="left" in={isMenuOpen} style={{ zIndex: 10 }}>
+                <SideBar goals={goals} onOpen={onOpen} closeMobile={setIsMenuOpen} />
+              </Slide>
+            </>
+          ) : (
+            <>
+              <SideBar goals={goals} onOpen={onOpen} />
+            </>
+          )}
+          <Flex flexDirection="column" width="100%" align="center">
+            <Img src="/empty.png" marginTop="50%" />
+            <Flex width="80%" onClick={() => onOpen()} marginTop="1.5rem">
+              <Button description="Crie uma nova meta" color="pink.500" width="100%" />
+            </Flex>
             <FormGoal isOpen={isOpen} handleClose={handleClose} />
           </Flex>
         </>
