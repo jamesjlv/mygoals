@@ -1,4 +1,4 @@
-import { Flex, Text, Grid } from '@chakra-ui/react';
+import { Flex, Text, Grid, useBreakpointValue } from '@chakra-ui/react';
 import { CheckIcon } from '@chakra-ui/icons';
 import { useContext } from 'react';
 import { GoalsContext } from '../../../contexts/GoalsContext';
@@ -16,11 +16,12 @@ interface CardProps {
     category: string;
     reports: [];
   };
+  closeMenu?: (boolean) => void;
 }
 
-export function Card({ goal }: CardProps) {
+export function Card({ goal, closeMenu }: CardProps) {
   const { selectedGoal, handleGoalsData } = useContext(GoalsContext);
-
+  const isMobile = useBreakpointValue({ base: true, md: true, lg: true, xl: false });
   const { days, description } = goal;
 
   return (
@@ -36,6 +37,9 @@ export function Card({ goal }: CardProps) {
       gap="2"
       onClick={() => {
         handleGoalsData({ ...goal });
+        if (isMobile) {
+          closeMenu(false);
+        }
       }}
     >
       <Flex flexDirection="column" alignItems="center">

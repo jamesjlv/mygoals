@@ -76,6 +76,7 @@ export function SideBar({ goals, onOpen, closeMobile }: SideBarProps) {
               description={goal.description}
               goals={goal.goals}
               filter={filter}
+              closeMobile={closeMobile}
             />
           ))}
         {!goals[0] && (

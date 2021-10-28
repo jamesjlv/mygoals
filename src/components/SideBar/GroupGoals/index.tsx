@@ -16,9 +16,10 @@ type GroupGoalsProps = {
     reports: [];
   }[];
   filter: string;
+  closeMobile?: (boolean?) => void;
 };
 
-export function GroupGoals({ description, goals, filter }: GroupGoalsProps) {
+export function GroupGoals({ description, goals, filter, closeMobile }: GroupGoalsProps) {
   const [renderThisGroup, setRenderThisGroup] = useState(
     goals.length == 0 ? 'dontrender' : 'initial'
   );
@@ -36,7 +37,11 @@ export function GroupGoals({ description, goals, filter }: GroupGoalsProps) {
                 setRenderThisGroup('haveSomething');
               }
               return (
-                <Card key={Math.random()} goal={{ ...goal, category_description: description }} />
+                <Card
+                  key={Math.random()}
+                  goal={{ ...goal, category_description: description }}
+                  closeMenu={closeMobile}
+                />
               );
             } else {
               if (renderThisGroup === 'haveSomething') {
@@ -47,7 +52,11 @@ export function GroupGoals({ description, goals, filter }: GroupGoalsProps) {
             }
           } else {
             return (
-              <Card key={Math.random()} goal={{ ...goal, category_description: description }} />
+              <Card
+                key={Math.random()}
+                goal={{ ...goal, category_description: description }}
+                closeMenu={closeMobile}
+              />
             );
           }
         })}
