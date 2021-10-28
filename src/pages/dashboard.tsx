@@ -104,7 +104,11 @@ export default function Dashboard({ goals_data }: DashboardProps) {
                 onClick={() => setIsMenuOpen(true)}
                 zIndex="1"
               />
-              <Slide direction="left" in={isMenuOpen} style={{ zIndex: 10 }}>
+              <Slide
+                direction="left"
+                in={isMenuOpen}
+                style={{ zIndex: 10, height: '100%', width: '100%' }}
+              >
                 <SideBar goals={goals} onOpen={onOpen} closeMobile={setIsMenuOpen} />
               </Slide>
             </>
@@ -113,7 +117,7 @@ export default function Dashboard({ goals_data }: DashboardProps) {
               <SideBar goals={goals} onOpen={onOpen} />
             </>
           )}
-          <Flex flexDirection="column" width="100%" align="center">
+          <Flex flexDirection="column" width="100%" align="center" height="100%">
             <Img src="/empty.png" marginTop="50%" />
             <Flex width="80%" onClick={() => onOpen()} marginTop="1.5rem">
               <Button description="Crie uma nova meta" color="pink.500" width="100%" />

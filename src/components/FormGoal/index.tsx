@@ -14,7 +14,7 @@ import { Button } from '../Button';
 import { Input } from '../Form/Input';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { GoalsContext } from '../../contexts/GoalsContext';
 
 interface FormGoalProps {
@@ -33,6 +33,19 @@ type CreateGoalData = {
   quantity: string;
 };
 
+type SelectedGoalData = {
+  ref: string;
+  category_description: string;
+  days: number;
+  daysCompleted: number;
+  description: string;
+  end_date: string;
+  start_date: string;
+  report_type: string;
+  category: string;
+  reports: [];
+};
+
 const createGoalSchema = yup.object().shape({
   ref: yup.string(),
   description: yup.string().required('Descrição obrigatória'),
@@ -41,8 +54,9 @@ const createGoalSchema = yup.object().shape({
 });
 
 export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
-  const { selectedGoal } = useContext(GoalsContext);
+  const { selectedGoal, handleGoalsData } = useContext(GoalsContext);
   const [stateForm, setStateForm] = useState(false);
+  const [formGoal, setFormGoal] = useState({} as SelectedGoalData);
 
   const {
     register,
@@ -63,13 +77,19 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
       handleClose();
       reset();
       setStateForm(false);
+      handleGoalsData({} as SelectedGoalData);
     });
   };
 
   function handleResetForm() {
+    handleGoalsData({} as SelectedGoalData);
     handleClose();
     reset();
   }
+
+  useEffect(() => {
+    setFormGoal(selectedGoal);
+  }, [selectedGoal]);
 
   return (
     <Modal isOpen={isOpen} onClose={handleResetForm}>
@@ -92,29 +112,48 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
             onSubmit={handleSubmit(handleCreateGoal)}
           >
             {selectedGoal?.ref !== undefined && (
-              <Input
-                name="ref"
-                type="hidden"
-                value={selectedGoal?.ref}
-                register={register}
-                error={errors.ref}
-              />
+              <>
+                <Input
+                  name="ref"
+                  type="hidden"
+                  value={formGoal?.ref}
+                  register={register}
+                  error={errors.ref}
+                />
+                <Input
+                  name="start_date"
+                  type="hidden"
+                  value={formGoal?.start_date}
+                  register={register}
+                  error={errors.start_date}
+                />
+              </>
             )}
             <Input
               name="description"
               label="Nome da meta"
               placeholder="Estudar matemática..."
-              value={selectedGoal?.description}
+              value={formGoal?.description}
               register={register}
               error={errors.description}
+              onChange={(e) =>
+                setFormGoal((prevState) => {
+                  return { ...prevState, description: e.target.value };
+                })
+              }
             />
             <Input
               name="category"
               label="Categoria"
               placeholder="Esportes, saúde, estudos..."
-              value={selectedGoal?.category_description}
+              value={formGoal?.category_description}
               register={register}
               error={errors.category}
+              onChange={(e) =>
+                setFormGoal((prevState) => {
+                  return { ...prevState, category_description: e.target.value };
+                })
+              }
             />
             <Text marginTop="1rem" fontWeight="500" color="gray.500" fontSize={['.8rem', '1rem']}>
               Em quantos dias você deseja concluir a meta?
@@ -122,10 +161,16 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
             <Flex flexDirection="row" width="30%" marginBottom="2rem">
               <Input
                 name="quantity"
-                value={selectedGoal?.days}
+                value={formGoal?.days}
                 placeholder="Ex: 99"
                 register={register}
                 error={errors.quantity}
+                onChange={(e) =>
+                  setFormGoal((prevState) => {
+                    return { ...prevState, days: Number(e.target.value) };
+                  })
+                }
+                type="number"
               />
             </Flex>
             <Button

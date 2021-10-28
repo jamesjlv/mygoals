@@ -33,7 +33,7 @@ export function DashBoard({ onOpen }: DashboardProps) {
         dataLabels: {
           name: {
             show: true,
-            fontSize: '1rem',
+            fontSize: '1.5rem',
             fontFamily: 'Sora',
             fontWeight: 600,
             color: theme.colors.pink[500],
@@ -88,13 +88,24 @@ export function DashBoard({ onOpen }: DashboardProps) {
           }}
         >
           <Chart options={options} series={series} type="radialBar" width="350" height="350" />
+          <Text color="gray.400" fontSize={['.8rem', '1rem']}>
+            Hey, você já completou{' '}
+            <Text as="strong" color="pink.600">
+              {selectedGoal?.daysCompleted}
+            </Text>{' '}
+            de{' '}
+            <Text as="strong" color="pink.600">
+              {' '}
+              {selectedGoal?.days} dias
+            </Text>{' '}
+            da sua meta
+          </Text>
           <Flex
             height="2.5rem"
             style={{ border: '1px solid #C4244D', borderRadius: '8px' }}
             alignItems="center"
             justifyContent="center"
             marginTop="2rem"
-            marginBottom={['.1rem', '1rem']}
             width="100%"
             maxWidth={['89%', '34%']}
           >
@@ -103,7 +114,7 @@ export function DashBoard({ onOpen }: DashboardProps) {
               <EditIcon marginLeft="1rem" />
             </Flex>
           </Flex>
-          <Grid marginTop="2rem" gridTemplateColumns={['1fr 1fr', '1fr 1fr']} gap="2">
+          <Grid marginTop={['1rem', '1rem']} gridTemplateColumns={['1fr 1fr', '1fr 1fr']} gap="2">
             <Button description="Concluido" color={theme.colors.green[500]} width="100%" />
             <Button description="Hoje não deu..." color={theme.colors.gray[500]} width="100%" />
           </Grid>

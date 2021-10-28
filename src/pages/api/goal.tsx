@@ -10,6 +10,7 @@ type BodyProps = {
   description: string;
   category: string;
   ref: string;
+  start_date?: string;
 };
 
 type CategoryReturn = {
@@ -23,7 +24,13 @@ type CategoryReturn = {
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
-    const { quantity, description, category, ref }: BodyProps = JSON.parse(req.body);
+    const {
+      quantity,
+      description,
+      category,
+      ref,
+      start_date: initialDate,
+    }: BodyProps = JSON.parse(req.body);
     const session = await getSession({ req });
 
     if (!session) {
@@ -89,6 +96,44 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       }
     } else {
       console.log({ quantity, description, category, ref });
+
+      const daysadded = add(new Date(initialDate), { days: Number(quantity) });
+      const end_date = new Date(daysadded).toLocaleDateString('ja-jp').split('/').join(',');
+
+      const categoryResult = await fauna.query<CategoryReturn>(
+        q.Map(
+          q.Paginate(q.Match(q.Index('category_filter'), [session.user.email, category])),
+          q.Lambda('X', q.Get(q.Var('X')))
+        )
+      );
+
+      const { data, ref: refCategory } = categoryResult;
+
+      if (data[0]?.data?.description === category) {
+        await fauna.query(
+          q.Update(q.Ref(q.Collection('goals'), ref), {
+            data: { description: description, category: refCategory, end_date: end_date },
+          })
+        );
+      } else {
+        const categoryNew = await fauna.query<CategoryReturn>(
+          q.Create(q.Collection('category_goals'), {
+            data: {
+              user_email: session.user.email,
+              description: category,
+            },
+          })
+        );
+        await fauna.query(
+          q.Update(q.Ref(q.Collection('goals'), ref), {
+            data: {
+              description: description,
+              category: categoryNew.ref.value.id,
+              end_date: end_date,
+            },
+          })
+        );
+      }
     }
 
     return res.status(200).json({ sessionId: session });

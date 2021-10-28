@@ -54,8 +54,8 @@ export function SideBar({ goals, onOpen, closeMobile }: SideBarProps) {
   return (
     <Flex
       background="gray.800"
-      w={['100%', '40%']}
-      height={['100%', 'auto']}
+      w={['100%', '100%', '40%']}
+      height={['100%', '100%', '100%', '100%', 'auto']}
       flexDirection="column"
     >
       <Flex
@@ -64,8 +64,8 @@ export function SideBar({ goals, onOpen, closeMobile }: SideBarProps) {
         justifyContent="space-between"
         margin="2rem 2.5rem 0"
       >
-        <PlusSquareIcon onClick={handleCreateForm} />
-        {isMobile && <CloseIcon onClick={() => closeMobile(false)} />}
+        <PlusSquareIcon onClick={handleCreateForm} cursor="pointer" />
+        {isMobile && <CloseIcon onClick={() => closeMobile(false)} cursor="pointer" />}
       </Flex>
       <Search filter={setFilter} />
       <Stack alignItems="center" spacing="1rem">

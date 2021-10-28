@@ -41,6 +41,7 @@ export function Card({ goal, closeMenu }: CardProps) {
           closeMenu(false);
         }
       }}
+      cursor="pointer"
     >
       <Flex flexDirection="column" alignItems="center">
         <Text fontWeight="semibold">{days}</Text>
@@ -50,7 +51,7 @@ export function Card({ goal, closeMenu }: CardProps) {
         <Text fontSize="1rem">{description}</Text>
       </Flex>
       <Flex>
-        <CheckIcon color="pink.500" />
+        <CheckIcon color={selectedGoal?.ref === goal?.ref ? 'pink.900' : 'pink.600'} />
       </Flex>
     </Grid>
   );
