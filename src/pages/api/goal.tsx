@@ -107,12 +107,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         )
       );
 
-      const { data, ref: refCategory } = categoryResult;
-
-      if (data[0]?.data?.description === category) {
+      if (categoryResult.data[0]?.data?.description === category) {
         await fauna.query(
           q.Update(q.Ref(q.Collection('goals'), ref), {
-            data: { description: description, category: refCategory, end_date: end_date },
+            data: {
+              description: description,
+              category: categoryResult.data[0].ref.value.id,
+              end_date: end_date,
+            },
           })
         );
       } else {
