@@ -16,6 +16,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useContext, useEffect, useState } from 'react';
 import { GoalsContext } from '../../contexts/GoalsContext';
+import { api } from '../../services/api';
 
 interface FormGoalProps {
   isOpen: boolean;
@@ -28,6 +29,7 @@ interface FormGoalProps {
 }
 
 type CreateGoalData = {
+  ref?: string;
   description: string;
   category: string;
   quantity: string;
@@ -70,10 +72,11 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
     setStateForm(true);
     return new Promise<void>(async (resolve) => {
       resolve();
-      await fetch('./api/goal', {
-        method: 'POST',
-        body: JSON.stringify(values),
-      });
+      if (values.ref) {
+        await api.put('/api/goal', values);
+      } else {
+        await api.post('/api/goal', values);
+      }
       handleClose();
       reset();
       setStateForm(false);
@@ -120,6 +123,7 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
                   register={register}
                   error={errors.ref}
                 />
+
                 <Input
                   name="start_date"
                   type="hidden"

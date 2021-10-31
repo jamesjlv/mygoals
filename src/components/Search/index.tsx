@@ -1,5 +1,6 @@
 import { Flex, Input, Text, Stack, Grid, Spinner, Icon } from '@chakra-ui/react';
 import { IoSearchOutline } from 'react-icons/io5';
+import { theme } from '../../styles/theme';
 interface SearchProps {
   filter: (string) => void;
 }
@@ -30,6 +31,8 @@ export function Search({ filter }: SearchProps) {
           borderColor="gray.700"
           placeholder="Buscar uma meta..."
           paddingLeft="3rem"
+          fontSize={['.8rem', '1rem']}
+          _focus={{ borderColor: theme.colors.pink[600] }}
           onChange={(e) => filter(e.target.value)}
         />
       </Flex>

@@ -26,8 +26,13 @@ export function GroupGoals({ description, goals, filter, closeMobile }: GroupGoa
 
   if (renderThisGroup === 'initial' || renderThisGroup === 'haveSomething') {
     return (
-      <Flex flexDirection="column" width="80%" borderRadius="4px" marginTop="1rem">
-        <Text fontSize=".8rem" color="gray.400" fontWeight="semibold" marginBottom=".5rem">
+      <Flex flexDirection="column" width="80%" marginTop={['.5rem', '1rem']}>
+        <Text
+          fontSize={['.6rem', '.8rem']}
+          color="gray.400"
+          fontWeight="semibold"
+          marginBottom=".5rem"
+        >
           {description}
         </Text>
         {goals?.map((goal) => {

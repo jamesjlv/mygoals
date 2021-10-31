@@ -30,10 +30,10 @@ export function Card({ goal, closeMenu }: CardProps) {
       alignItems="center"
       justifyItems="center"
       width="100%"
-      height="4rem"
+      height={['3rem', '4rem']}
       bg={selectedGoal?.ref === goal?.ref ? 'pink.600' : 'gray.700'}
       borderRadius="4"
-      marginBottom="1rem"
+      marginBottom={['.5rem', '1rem']}
       gap="2"
       onClick={() => {
         handleGoalsData({ ...goal });
@@ -44,11 +44,17 @@ export function Card({ goal, closeMenu }: CardProps) {
       cursor="pointer"
     >
       <Flex flexDirection="column" alignItems="center">
-        <Text fontWeight="semibold">{days}</Text>
-        <Text fontSize=".7rem">dias</Text>
+        <Text fontWeight="semibold" fontSize={['.8rem', '1rem']}>
+          {days < 9999 ? days : days < 99999 ? Math.floor(days / 30) : Math.floor(days / 365)}
+        </Text>
+        <Text fontSize={['.5rem', '.7rem']}>
+          {days < 9999 ? 'dias' : days < 99999 ? 'meses' : 'anos'}
+        </Text>
       </Flex>
       <Flex width="100%">
-        <Text fontSize="1rem">{description}</Text>
+        <Text fontSize={['0.8rem', '.8rem']}>
+          {description.length > 15 ? `${description.slice(0, 15)}...` : description}
+        </Text>
       </Flex>
       <Flex>
         <CheckIcon color={selectedGoal?.ref === goal?.ref ? 'pink.900' : 'pink.600'} />

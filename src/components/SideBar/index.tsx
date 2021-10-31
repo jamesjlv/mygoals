@@ -64,8 +64,15 @@ export function SideBar({ goals, onOpen, closeMobile }: SideBarProps) {
         justifyContent="space-between"
         margin="2rem 2.5rem 0"
       >
-        <PlusSquareIcon onClick={handleCreateForm} cursor="pointer" />
-        {isMobile && <CloseIcon onClick={() => closeMobile(false)} cursor="pointer" />}
+        <PlusSquareIcon onClick={handleCreateForm} cursor="pointer" _focus={{ outline: 'none' }} />
+        {isMobile && (
+          <CloseIcon
+            onClick={() => closeMobile(false)}
+            cursor="pointer"
+            fontSize=".7rem"
+            _focus={{ outline: 'none' }}
+          />
+        )}
       </Flex>
       <Search filter={setFilter} />
       <Stack alignItems="center" spacing="1rem">

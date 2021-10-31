@@ -44,7 +44,7 @@ export default function Dashboard({ goals_data }: DashboardProps) {
   const [goals, setGoals] = useState<GoalsData>(goals_data);
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [session, loading] = useSession();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(true);
   const isMobile = useBreakpointValue({ base: true, md: true, lg: true, xl: false });
 
   async function handleClose(): Promise<void> {
@@ -101,7 +101,7 @@ export default function Dashboard({ goals_data }: DashboardProps) {
                 marginLeft="1rem"
                 position="absolute"
                 fontSize="1.5rem"
-                onClick={() => setIsMenuOpen(true)}
+                onClick={() => setIsMenuOpen(false)}
                 zIndex="1"
               />
               <Slide
