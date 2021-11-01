@@ -3,11 +3,11 @@ import {
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
   Flex,
   Text,
+  useToast,
 } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Button } from '../Button';
@@ -15,7 +15,7 @@ import { Select } from '../Form/Select';
 import { Input } from '../Form/Input';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import React, { EventHandler, useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { GoalsContext } from '../../contexts/GoalsContext';
 import { api } from '../../services/api';
 
@@ -55,11 +55,12 @@ const createGoalSchema = yup.object().shape({
   description: yup.string().required('Descrição obrigatória'),
   category: yup.string().required('Informe uma categoria'),
   quantity: yup.number().required('Informe os dias').typeError('Apenas numeros'),
-  type: yup.string().required('Informe como o sistema deve concluir sua meta'),
+  type: yup.string(),
 });
 
 export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
-  const { selectedGoal, reloadGoalsData, handleGoalsData } = useContext(GoalsContext);
+  const { selectedGoal, reloadGoalsData } = useContext(GoalsContext);
+  const toast = useToast();
   const [stateForm, setStateForm] = useState(false);
   const [formGoal, setFormGoal] = useState<SelectedGoalData>({} as SelectedGoalData);
 
@@ -76,17 +77,37 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
     setStateForm(true);
     return new Promise<void>(async (resolve) => {
       resolve();
-      if (values.ref) {
-        await api.put('/api/goal', values);
-      } else {
-        await api.post('/api/goal', values);
+      try {
+        if (values.ref) {
+          await api.put('/api/goal', values);
+        } else {
+          await api.post('/api/goal', values);
+        }
+        handleClose();
+        reset();
+        reloadGoalsData(selectedGoal.ref);
+        setStateForm(false);
+        toast({
+          title: `Meta salva com sucesso`,
+          status: 'success',
+          position: 'top',
+          isClosable: true,
+        });
+      } catch (error) {
+        setStateForm(false);
+        toast({
+          title: `Não foi possivel salvar a meta`,
+          status: 'error',
+          position: 'top',
+          isClosable: true,
+        });
       }
-      handleClose();
-      reset();
-      setStateForm(false);
-      reloadGoalsData(selectedGoal.ref);
     });
   };
+
+  if (errors) {
+    console.log(errors);
+  }
 
   function handleResetForm() {
     reloadGoalsData(selectedGoal.ref);
@@ -140,7 +161,7 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
               name="description"
               label="Nome da meta"
               placeholder="Estudar matemática..."
-              value={formGoal?.description}
+              defaultValue={formGoal?.description}
               register={register}
               error={errors.description}
             />
@@ -148,7 +169,7 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
               name="category"
               label="Categoria"
               placeholder="Esportes, saúde, estudos..."
-              value={formGoal?.category_description}
+              defaultValue={formGoal?.category_description}
               register={register}
               error={errors.category}
             />
@@ -158,7 +179,7 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
             <Flex flexDirection="row" width="30%">
               <Input
                 name="quantity"
-                value={formGoal?.days}
+                defaultValue={formGoal?.days}
                 placeholder="Ex: 99"
                 register={register}
                 error={errors.quantity}

@@ -4,6 +4,7 @@ import {
   Stack,
   Button as ChakraButton,
   Img,
+  Avatar,
   useBreakpointValue,
 } from '@chakra-ui/react';
 import { Search } from '../Search';
@@ -122,17 +123,17 @@ export function SideBar({ goals, onOpen, closeMobile }: SideBarProps) {
         margin="0 auto"
       >
         <Flex width="100%" align="center">
-          <Img
-            src={session.user.image}
-            width={['40px', '50px']}
-            height={['40px', '50px']}
-            borderRadius="50%"
-          />
-          <Text marginLeft="1rem" color="gray.500" fontSize={['0.8rem', '1rem']}>
-            {session.user.name}
-          </Text>
+          <Avatar name={session.user.name} src={session.user.image} />
+          <Flex flexDirection="column">
+            <Text marginLeft="1rem" color="gray.200" fontSize={['0.8rem', '.8rem']}>
+              {session.user.name}
+            </Text>
+            <Text marginLeft="1rem" color="gray.200" fontSize={['0.8rem', '.8rem']}>
+              {session.user.email}
+            </Text>
+          </Flex>
         </Flex>
-        <ChakraButton bg="gray.800" fontSize={['.8rem', '1rem']} onClick={() => signOut()}>
+        <ChakraButton bg="gray.800" fontSize={['.8rem', '.9rem']} onClick={() => signOut()}>
           Sair
         </ChakraButton>
       </Flex>
