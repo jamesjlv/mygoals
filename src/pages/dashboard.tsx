@@ -79,7 +79,7 @@ export default function Dashboard({ goals_data }: DashboardProps) {
                 onClick={() => setIsMenuOpen(true)}
                 zIndex="1"
               />
-              <Slide direction="left" in={isMenuOpen} style={{ zIndex: 10 }}>
+              <Slide direction="left" in={isMenuOpen} style={{ zIndex: 10, height: '100%' }}>
                 <SideBar goals={goals} onOpen={onOpen} closeMobile={setIsMenuOpen} />
               </Slide>
             </>

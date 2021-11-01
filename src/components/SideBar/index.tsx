@@ -1,10 +1,18 @@
-import { Flex, Text, Stack, Grid, Spinner, Img, useBreakpointValue } from '@chakra-ui/react';
+import {
+  Flex,
+  Text,
+  Stack,
+  Button as ChakraButton,
+  Img,
+  useBreakpointValue,
+} from '@chakra-ui/react';
 import { Search } from '../Search';
 import { GroupGoals } from './GroupGoals';
 import { PlusSquareIcon, CloseIcon } from '@chakra-ui/icons';
 import { useContext, useState } from 'react';
 import { GoalsContext } from '../../contexts/GoalsContext';
 import { Button } from '../Button';
+import { signOut, useSession } from 'next-auth/client';
 
 type GoalsData = {
   description?: string;
@@ -45,7 +53,9 @@ interface SideBarProps {
 export function SideBar({ goals, onOpen, closeMobile }: SideBarProps) {
   const { handleGoalsData } = useContext(GoalsContext);
   const [filter, setFilter] = useState('');
+  const [session, loading] = useSession();
   const isMobile = useBreakpointValue({ base: true, md: true, lg: true, xl: false });
+
   function handleCreateForm() {
     handleGoalsData({} as SelectedGoalData);
     onOpen();
@@ -55,8 +65,15 @@ export function SideBar({ goals, onOpen, closeMobile }: SideBarProps) {
     <Flex
       background="gray.800"
       w={['100%', '100%', '40%']}
-      height={['100%', '100%', '100%', '100%', 'auto']}
+      height={['100%', '100%']}
       flexDirection="column"
+      overflow="auto"
+      css={{
+        '&::-webkit-scrollbar': {
+          width: '0px',
+          background: 'transparent',
+        },
+      }}
     >
       <Flex
         flexDirection="row"
@@ -95,6 +112,30 @@ export function SideBar({ goals, onOpen, closeMobile }: SideBarProps) {
           </>
         )}
       </Stack>
+      <Flex
+        marginTop="2rem"
+        marginBottom="2rem"
+        width="80%"
+        flexDirection="row"
+        align="center"
+        padding="2rem 0"
+        margin="0 auto"
+      >
+        <Flex width="100%" align="center">
+          <Img
+            src={session.user.image}
+            width={['40px', '50px']}
+            height={['40px', '50px']}
+            borderRadius="50%"
+          />
+          <Text marginLeft="1rem" color="gray.500" fontSize={['0.8rem', '1rem']}>
+            {session.user.name}
+          </Text>
+        </Flex>
+        <ChakraButton bg="gray.800" fontSize={['.8rem', '1rem']} onClick={() => signOut()}>
+          Sair
+        </ChakraButton>
+      </Flex>
     </Flex>
   );
 }
