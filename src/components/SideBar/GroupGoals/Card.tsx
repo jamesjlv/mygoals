@@ -53,7 +53,7 @@ export function Card({ goal, closeMenu }: CardProps) {
       </Flex>
       <Flex width="100%">
         <Text fontSize={['0.8rem', '.8rem']}>
-          {description.length > 15 ? `${description.slice(0, 15)}...` : description}
+          {description.length > 20 ? `${description.slice(0, 20)}...` : description}
         </Text>
       </Flex>
       <Flex>

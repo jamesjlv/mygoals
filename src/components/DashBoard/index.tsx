@@ -1,69 +1,35 @@
-import { Flex, Text, Grid, GridItem, Image, ScaleFade, useBreakpointValue } from '@chakra-ui/react';
-import { ApexOptions } from 'apexcharts';
-import dynamic from 'next/dynamic';
+import { Flex, Text, Grid, Image, ScaleFade } from '@chakra-ui/react';
 import { theme } from '../../styles/theme';
 import { Button } from '../Button';
 import { EditIcon } from '@chakra-ui/icons';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { GoalsContext } from '../../contexts/GoalsContext';
-
-const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
+import { RadialBar } from './RadialBar';
+import { format } from 'date-fns';
+import { api } from '../../services/api';
+import { SyncUserGoals } from '../../services/SyncUserGoals';
+import { getSession } from 'next-auth/client';
+import { Options } from './Options';
 
 interface DashboardProps {
   onOpen: () => void;
 }
 
+type SelectedGoalData = {
+  ref: string;
+  category_description: string;
+  days: number;
+  daysCompleted: number;
+  description: string;
+  end_date: string;
+  start_date: string;
+  report_type: string;
+  category: string;
+  reports: [];
+};
+
 export function DashBoard({ onOpen }: DashboardProps) {
   const { selectedGoal } = useContext(GoalsContext);
-  const isMobile = useBreakpointValue({ base: true, md: true, lg: true, xl: false });
-
-  const options: ApexOptions = {
-    chart: {
-      width: '100%',
-      height: 280,
-      type: 'radialBar',
-      foreColor: theme.colors.pink[500],
-    },
-    plotOptions: {
-      radialBar: {
-        hollow: {
-          margin: 15,
-          size: '85%',
-        },
-        dataLabels: {
-          name: {
-            show: true,
-            fontSize: '1.5rem',
-            fontFamily: 'Sora',
-            fontWeight: 600,
-            color: theme.colors.pink[500],
-          },
-          value: {
-            show: true,
-            fontSize: '1rem',
-            color: theme.colors.pink[600],
-            fontWeight: 700,
-          },
-        },
-      },
-    },
-    stroke: {
-      lineCap: 'round',
-    },
-    labels: [`Meta: ${selectedGoal?.days || 0} dias`],
-    fill: {
-      colors: theme.colors.pink[500],
-      opacity: 0.1,
-      type: 'gradient',
-      gradient: {
-        shade: 'dark',
-        opacityFrom: 1,
-        opacityTo: 0.8,
-      },
-    },
-  };
-
-  const series = [Math.floor((100 * selectedGoal?.daysCompleted) / selectedGoal?.days) || 0];
 
   return (
     <Flex flexDirection="column" height="100%" alignItems="center" justifyContent="center">
@@ -87,19 +53,8 @@ export function DashBoard({ onOpen }: DashboardProps) {
             flexDirection: 'column',
           }}
         >
-          <Chart options={options} series={series} type="radialBar" width="350" height="350" />
-          <Text color="gray.400" fontSize={['.8rem', '1rem']}>
-            Hey, você já completou{' '}
-            <Text as="strong" color="pink.600">
-              {selectedGoal?.daysCompleted}
-            </Text>{' '}
-            de{' '}
-            <Text as="strong" color="pink.600">
-              {' '}
-              {selectedGoal?.days} dias
-            </Text>{' '}
-            da sua meta
-          </Text>
+          <RadialBar />
+
           <Flex
             height="2.5rem"
             style={{ border: '1px solid #C4244D', borderRadius: '8px' }}
@@ -114,10 +69,7 @@ export function DashBoard({ onOpen }: DashboardProps) {
               <EditIcon marginLeft="1rem" />
             </Flex>
           </Flex>
-          <Grid marginTop={['1rem', '1rem']} gridTemplateColumns={['1fr 1fr', '1fr 1fr']} gap="2">
-            <Button description="Concluido" color={theme.colors.green[500]} width="100%" />
-            <Button description="Hoje não deu..." color={theme.colors.gray[500]} width="100%" />
-          </Grid>
+          <Options />
         </ScaleFade>
       )}
     </Flex>

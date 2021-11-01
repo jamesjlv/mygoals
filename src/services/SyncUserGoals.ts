@@ -105,6 +105,24 @@ function reportsFiltered(reports: ReportsData, goalRef: string) {
 function goalsObjectFiltered(goalsFilter: GoalsData, catId: string, goalReports: ReportsData) {
   let goalFiltered = [];
 
+  function daysCompleted(startDate: string, endDate: string) {
+    const dateNow = format(new Date(), 'yyyy,MM,dd');
+
+    if (
+      differenceInDays(
+        new Date(dateNow.split(',').join('/')),
+        new Date(endDate.split(',').join('/'))
+      ) >= 0
+    ) {
+      return differenceInDays(
+        new Date(endDate.split(',').join('/')),
+        new Date(startDate.split(',').join('/'))
+      );
+    } else {
+      return differenceInDays(Date.now(), new Date(startDate.split(',').join('/')));
+    }
+  }
+
   const goalstemp = goalsFilter.data.map((goal) => {
     if (goal.data.category === catId) {
       goalFiltered.push({
@@ -116,10 +134,7 @@ function goalsObjectFiltered(goalsFilter: GoalsData, catId: string, goalReports:
           new Date(goal?.data?.end_date.split(',').join('/')),
           new Date(goal?.data?.start_date.split(',').join('/'))
         ),
-        daysCompleted: differenceInDays(
-          Date.now(),
-          new Date(goal.data.start_date.split(',').join('/'))
-        ),
+        daysCompleted: daysCompleted(goal.data.start_date, goal.data.end_date),
         report_type: goal.data.report_type,
         category: goal.data.category,
         reports: reportsFiltered(goalReports, goal.ref.value.id),

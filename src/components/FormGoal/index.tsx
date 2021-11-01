@@ -11,10 +11,11 @@ import {
 } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Button } from '../Button';
+import { Select } from '../Form/Select';
 import { Input } from '../Form/Input';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useContext, useEffect, useState } from 'react';
+import React, { EventHandler, useContext, useEffect, useState } from 'react';
 import { GoalsContext } from '../../contexts/GoalsContext';
 import { api } from '../../services/api';
 
@@ -33,6 +34,7 @@ type CreateGoalData = {
   description: string;
   category: string;
   quantity: string;
+  type: string;
 };
 
 type SelectedGoalData = {
@@ -53,12 +55,13 @@ const createGoalSchema = yup.object().shape({
   description: yup.string().required('Descrição obrigatória'),
   category: yup.string().required('Informe uma categoria'),
   quantity: yup.number().required('Informe os dias').typeError('Apenas numeros'),
+  type: yup.string().required('Informe como o sistema deve concluir sua meta'),
 });
 
 export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
-  const { selectedGoal, handleGoalsData } = useContext(GoalsContext);
+  const { selectedGoal, reloadGoalsData, handleGoalsData } = useContext(GoalsContext);
   const [stateForm, setStateForm] = useState(false);
-  const [formGoal, setFormGoal] = useState({} as SelectedGoalData);
+  const [formGoal, setFormGoal] = useState<SelectedGoalData>({} as SelectedGoalData);
 
   const {
     register,
@@ -68,6 +71,7 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
   } = useForm({
     resolver: yupResolver(createGoalSchema),
   });
+
   const handleCreateGoal: SubmitHandler<CreateGoalData> = async (values) => {
     setStateForm(true);
     return new Promise<void>(async (resolve) => {
@@ -80,12 +84,12 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
       handleClose();
       reset();
       setStateForm(false);
-      handleGoalsData({} as SelectedGoalData);
+      reloadGoalsData(selectedGoal.ref);
     });
   };
 
   function handleResetForm() {
-    handleGoalsData({} as SelectedGoalData);
+    reloadGoalsData(selectedGoal.ref);
     handleClose();
     reset();
   }
@@ -115,7 +119,7 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
             onSubmit={handleSubmit(handleCreateGoal)}
           >
             {selectedGoal?.ref !== undefined && (
-              <>
+              <Flex visibility="hidden" margin="0" padding="0">
                 <Input
                   name="ref"
                   type="hidden"
@@ -123,7 +127,6 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
                   register={register}
                   error={errors.ref}
                 />
-
                 <Input
                   name="start_date"
                   type="hidden"
@@ -131,7 +134,7 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
                   register={register}
                   error={errors.start_date}
                 />
-              </>
+              </Flex>
             )}
             <Input
               name="description"
@@ -140,11 +143,6 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
               value={formGoal?.description}
               register={register}
               error={errors.description}
-              onChange={(e) =>
-                setFormGoal((prevState) => {
-                  return { ...prevState, description: e.target.value };
-                })
-              }
             />
             <Input
               name="category"
@@ -153,30 +151,34 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
               value={formGoal?.category_description}
               register={register}
               error={errors.category}
-              onChange={(e) =>
-                setFormGoal((prevState) => {
-                  return { ...prevState, category_description: e.target.value };
-                })
-              }
             />
             <Text marginTop="1rem" fontWeight="500" color="gray.500" fontSize={['.8rem', '1rem']}>
-              Em quantos dias você deseja concluir a meta?
+              Quantos dias para atingir a meta?
             </Text>
-            <Flex flexDirection="row" width="30%" marginBottom="2rem">
+            <Flex flexDirection="row" width="30%">
               <Input
                 name="quantity"
                 value={formGoal?.days}
                 placeholder="Ex: 99"
                 register={register}
                 error={errors.quantity}
-                onChange={(e) =>
-                  setFormGoal((prevState) => {
-                    return { ...prevState, days: Number(e.target.value) };
-                  })
-                }
                 type="number"
+                marginBottom={!selectedGoal?.ref ? '0rem' : '2rem' || 0}
               />
             </Flex>
+            {!selectedGoal?.ref && (
+              <Select
+                name="type"
+                label="Como devo marcar que a meta foi concluida diariamente?"
+                register={register}
+                error={errors.type}
+                marginBottom="2rem"
+              >
+                <option value="auto_report">Automaticamente</option>
+                <option value="need_report">Manualmente</option>
+              </Select>
+            )}
+
             <Button
               description="Salvar"
               color="pink.600"

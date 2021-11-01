@@ -11,6 +11,7 @@ type BodyProps = {
   category: string;
   ref: string;
   start_date?: string;
+  type: string;
 };
 
 type CategoryReturn = {
@@ -24,7 +25,14 @@ type CategoryReturn = {
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
-    const { quantity, description, category, ref, start_date: initialDate }: BodyProps = req.body;
+    const {
+      quantity,
+      description,
+      category,
+      ref,
+      type,
+      start_date: initialDate,
+    }: BodyProps = req.body;
     const session = await getSession({ req });
 
     if (!session) {
@@ -55,7 +63,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
               end_date,
               category: data[0].ref.value.id,
               user_email: session.user.email,
-              report_type: 'auto_report',
+              report_type: type,
               user_id: session.id,
             },
           })
@@ -78,7 +86,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
               end_date,
               category: categoryNew.ref.value.id,
               user_email: session.user.email,
-              report_type: 'auto_report',
+              report_type: type,
               user_id: session.id,
             },
           })
@@ -90,7 +98,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     return res.status(200).json('Sucess');
   } else if (req.method === 'PUT') {
-    const { quantity, description, category, ref, start_date: initialDate }: BodyProps = req.body;
+    const {
+      quantity,
+      description,
+      category,
+      ref,
+      type,
+      start_date: initialDate,
+    }: BodyProps = req.body;
     const session = await getSession({ req });
     if (!session) {
       res.setHeader('Allow', 'POST');

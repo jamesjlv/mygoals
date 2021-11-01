@@ -20,11 +20,9 @@ type GroupGoalsProps = {
 };
 
 export function GroupGoals({ description, goals, filter, closeMobile }: GroupGoalsProps) {
-  const [renderThisGroup, setRenderThisGroup] = useState(
-    goals.length == 0 ? 'dontrender' : 'initial'
-  );
-
-  if (renderThisGroup === 'initial' || renderThisGroup === 'haveSomething') {
+  if (!goals.find((goal) => goal.description.toUpperCase().includes(filter.toUpperCase()))) {
+    return <></>;
+  } else {
     return (
       <Flex flexDirection="column" width="80%" marginTop={['.5rem', '1rem']}>
         <Text
@@ -37,10 +35,7 @@ export function GroupGoals({ description, goals, filter, closeMobile }: GroupGoa
         </Text>
         {goals?.map((goal) => {
           if (filter !== '') {
-            if (goal.description.includes(filter)) {
-              if (renderThisGroup === 'initial') {
-                setRenderThisGroup('haveSomething');
-              }
+            if (goal?.description?.toUpperCase().includes(filter.toUpperCase())) {
               return (
                 <Card
                   key={Math.random()}
@@ -48,12 +43,6 @@ export function GroupGoals({ description, goals, filter, closeMobile }: GroupGoa
                   closeMenu={closeMobile}
                 />
               );
-            } else {
-              if (renderThisGroup === 'haveSomething') {
-                return;
-              } else {
-                setRenderThisGroup('dontrender');
-              }
             }
           } else {
             return (
@@ -67,7 +56,5 @@ export function GroupGoals({ description, goals, filter, closeMobile }: GroupGoa
         })}
       </Flex>
     );
-  } else if (renderThisGroup === 'dontrender') {
-    return <></>;
   }
 }

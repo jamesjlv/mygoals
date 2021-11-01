@@ -1,6 +1,6 @@
 import { Flex, useDisclosure, Img } from '@chakra-ui/react';
 import { getSession, useSession } from 'next-auth/client';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { SideBar } from '../components/SideBar';
 import { SyncUserGoals } from '../services/SyncUserGoals';
 import { DashBoard } from '../components/DashBoard';
@@ -10,6 +10,7 @@ import { useBreakpointValue } from '@chakra-ui/react';
 import { Slide } from '@chakra-ui/transition';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import { Button } from '../components/Button';
+import { GoalsContext } from '../contexts/GoalsContext';
 
 type GoalsData = {
   description: string;
@@ -41,7 +42,8 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ goals_data }: DashboardProps) {
-  const [goals, setGoals] = useState<GoalsData>(goals_data);
+  const { goals, setGoals } = useContext(GoalsContext);
+
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [session, loading] = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(true);
