@@ -23,7 +23,7 @@ export function Card({ goal, closeMenu }: CardProps) {
   const { selectedGoal, handleGoalsData } = useContext(GoalsContext);
   const isMobile = useBreakpointValue({ base: true, md: true, lg: true, xl: false });
   const { days, description } = goal;
-
+  console.log(goal);
   return (
     <Grid
       templateColumns="20% 1fr 20%"
@@ -48,8 +48,10 @@ export function Card({ goal, closeMenu }: CardProps) {
           fontWeight="semibold"
           fontSize={['.8rem', '1rem']}
           color={
-            Math.floor((100 * goal?.daysCompleted - goal?.reports.length) / goal?.days) === 100 &&
-            'gray.400'
+            Math.floor((100 * goal?.daysCompleted - goal?.reports.length) / goal?.days) === 100 ||
+            goal.days == goal.reports.length
+              ? 'gray.400'
+              : ''
           }
         >
           {days < 9999 ? days : days < 99999 ? Math.floor(days / 30) : Math.floor(days / 365)}
@@ -57,8 +59,10 @@ export function Card({ goal, closeMenu }: CardProps) {
         <Text
           fontSize={['.5rem', '.7rem']}
           color={
-            Math.floor((100 * goal?.daysCompleted - goal?.reports.length) / goal?.days) === 100 &&
-            'gray.400'
+            Math.floor((100 * goal?.daysCompleted - goal?.reports.length) / goal?.days) === 100 ||
+            goal.days == goal.reports.length
+              ? 'gray.400'
+              : ''
           }
         >
           {days < 9999 ? 'dias' : days < 99999 ? 'meses' : 'anos'}
@@ -68,19 +72,24 @@ export function Card({ goal, closeMenu }: CardProps) {
         <Text
           fontSize={['0.8rem', '.8rem']}
           textDecoration={
-            Math.floor((100 * goal?.daysCompleted - goal?.reports.length) / goal?.days) === 100 &&
-            'line-through'
+            Math.floor((100 * goal?.daysCompleted - goal?.reports.length) / goal?.days) === 100 ||
+            goal.days == goal.reports.length
+              ? 'line-through'
+              : 'none'
           }
           color={
-            Math.floor((100 * goal?.daysCompleted - goal?.reports.length) / goal?.days) === 100 &&
-            'gray.400'
+            Math.floor((100 * goal?.daysCompleted - goal?.reports.length) / goal?.days) === 100 ||
+            goal.days == goal.reports.length
+              ? 'gray.400'
+              : ''
           }
         >
           {description.length > 20 ? `${description.slice(0, 20)}...` : description}
         </Text>
       </Flex>
       <Flex>
-        {Math.floor((100 * goal?.daysCompleted - goal?.reports.length) / goal?.days) === 100 ? (
+        {Math.floor((100 * goal?.daysCompleted - goal?.reports.length) / goal?.days) === 100 ||
+        goal.days == goal.reports.length ? (
           '🎉'
         ) : (
           <CheckIcon color={selectedGoal?.ref === goal?.ref ? 'pink.900' : 'pink.600'} />
