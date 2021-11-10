@@ -166,11 +166,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
     try {
       await fauna.query(q.Delete(q.Ref(q.Collection('goals'), ref)));
-      await fauna.query(
-        q.Delete(q.Select('ref', q.Get(q.Match(q.Index('goals_reports_by_goal_ref'), ref))))
-      );
+      try {
+        await fauna.query(
+          q.Delete(q.Select('ref', q.Get(q.Match(q.Index('goals_reports_by_goal_ref'), ref))))
+        );
+      } catch (error) {
+        console.log('Não há reports');
+      }
     } catch (error) {
-      res.setHeader('Error', 'the website cannot update the goal');
+      res.setHeader('Error', 'the website cannot delete the goal');
       res.status(405).end('Error when updating the goal');
     }
     return res.status(200).json('Sucess');

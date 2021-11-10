@@ -93,7 +93,7 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
           position: 'top',
           isClosable: true,
         });
-      } catch (error) {
+      } catch (err) {
         setStateForm(false);
         toast({
           title: `Não foi possivel salvar a meta`,
@@ -105,10 +105,6 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
     });
   };
 
-  if (errors) {
-    console.log(errors);
-  }
-
   function handleResetForm() {
     reloadGoalsData(selectedGoal.ref);
     handleClose();
@@ -119,10 +115,28 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
     setFormGoal(selectedGoal);
   }, [selectedGoal]);
 
-  async function handleDeleteGoal() {
+  async function handleDeleteGoal(ref: string) {
     setIsDeleting(true);
-    const goalDeleted = { ref: selectedGoal.ref };
-    await api.delete('/api/goal', { data: goalDeleted });
+    const goalDeleted = { ref };
+    try {
+      await api.delete('/api/goal', { data: goalDeleted });
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: `Não foi possivel excluir a meta`,
+        status: 'error',
+        position: 'top',
+        isClosable: true,
+      });
+    }
+
+    toast({
+      title: `Meta deletada com sucesso`,
+      status: 'success',
+      position: 'top',
+      isClosable: true,
+    });
+
     setIsDeleting(false);
   }
 
@@ -144,6 +158,7 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
             as="form"
             flexDirection="column"
             marginBottom="1rem"
+            name="goalForm"
             onSubmit={handleSubmit(handleCreateGoal)}
           >
             {selectedGoal?.ref !== undefined && (
@@ -212,12 +227,24 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
               color="pink.600"
               width="100%"
               type="submit"
+              form="goalForm"
               isLoading={stateForm}
             />
           </Flex>
           {selectedGoal?.ref && (
-            <Flex as="form" onSubmit={handleDeleteGoal} marginBottom="1rem">
-              <Button description="Deletar" color="gray.700" width="100%" isLoading={isDeleting} />
+            <Flex
+              as="form"
+              onSubmit={() => handleDeleteGoal(selectedGoal?.ref)}
+              marginBottom="1rem"
+              name="formDelete"
+            >
+              <Button
+                description="Deletar"
+                color="gray.700"
+                width="100%"
+                isLoading={isDeleting}
+                form="formDelete"
+              />
             </Flex>
           )}
         </ModalBody>

@@ -108,7 +108,12 @@ export function SideBar({ goals, onOpen, closeMobile }: SideBarProps) {
           <>
             <Img src="/empty.png" marginTop="50%" />
             <Flex width="80%" onClick={handleCreateForm}>
-              <Button description="Crie uma nova meta" color="pink.500" width="100%" />
+              <Button
+                description="Crie uma nova meta"
+                color="pink.500"
+                width="100%"
+                _hover={{ backgroundColor: 'pink.500' }}
+              />
             </Flex>
           </>
         )}
@@ -118,9 +123,10 @@ export function SideBar({ goals, onOpen, closeMobile }: SideBarProps) {
         marginBottom="2rem"
         width="80%"
         flexDirection="row"
-        align="center"
+        align="flex-end"
         padding="2rem 0"
         margin="0 auto"
+        height="100%"
       >
         <Flex width="100%" align="center">
           <Avatar name={session.user.name} src={session.user.image} />
@@ -138,6 +144,7 @@ export function SideBar({ goals, onOpen, closeMobile }: SideBarProps) {
           fontSize={['.8rem', '.9rem']}
           onClick={() => signOut()}
           _hover={{ backgroundColor: 'gray.700' }}
+          _active={{ backgroundColor: 'none' }}
         >
           Sair
         </ChakraButton>

@@ -24,7 +24,7 @@ export function Options() {
       reportDate: format(new Date(), 'yyyy,MM,dd'),
       type: type,
     });
-    if (type === 'dimiss') {
+    if (type === 'dismiss') {
       setDimiss(false);
     } else {
       setDid(false);

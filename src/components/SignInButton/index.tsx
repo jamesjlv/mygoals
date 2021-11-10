@@ -29,6 +29,7 @@ export function SignInButton({ provider }: SignInButtonProps) {
         filter: 'brightness(0.9)',
         transition: 'filter .2s ease-in-out',
       }}
+      _active={{ backgroundColor: 'none' }}
       onClick={handleSubscription}
       width="100%"
     >

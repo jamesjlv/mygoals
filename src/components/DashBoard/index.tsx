@@ -64,7 +64,13 @@ export function DashBoard({ onOpen }: DashboardProps) {
             width="100%"
             maxWidth={['89%', '34%']}
           >
-            <Flex alignItems="center" onClick={onOpen} cursor="pointer">
+            <Flex
+              alignItems="center"
+              onClick={onOpen}
+              cursor="pointer"
+              width="100%"
+              justifyContent="center"
+            >
               <Text>{selectedGoal?.description}</Text>
               <EditIcon marginLeft="1rem" />
             </Flex>

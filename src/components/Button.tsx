@@ -28,6 +28,7 @@ export function Button({
         _hover={{ filter: 'brightness(1.2)' }}
         isLoading={isLoading}
         type="submit"
+        _active={{ backgroundColor: 'none' }}
       >
         {isLoading ? (
           <Spinner />

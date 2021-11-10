@@ -119,10 +119,15 @@ export default function Dashboard({ goals_data }: DashboardProps) {
               <SideBar goals={goals} onOpen={onOpen} />
             </>
           )}
-          <Flex flexDirection="column" width="100%" align="center" height="100%">
-            <Img src="/empty.png" marginTop="50%" />
-            <Flex width="80%" onClick={() => onOpen()} marginTop="1.5rem">
-              <Button description="Crie uma nova meta" color="pink.500" width="100%" />
+          <Flex flexDirection="column" width="100%" align="center" height="100%" justify="center">
+            <Img src="/empty.png" />
+            <Flex width="30%" onClick={() => onOpen()} marginTop="1.5rem">
+              <Button
+                description="Crie uma nova meta"
+                color="pink.500"
+                width="100%"
+                _hover={{ backgroundColor: 'pink.500' }}
+              />
             </Flex>
             <FormGoal isOpen={isOpen} handleClose={handleClose} />
           </Flex>
