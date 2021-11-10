@@ -44,20 +44,47 @@ export function Card({ goal, closeMenu }: CardProps) {
       cursor="pointer"
     >
       <Flex flexDirection="column" alignItems="center">
-        <Text fontWeight="semibold" fontSize={['.8rem', '1rem']}>
+        <Text
+          fontWeight="semibold"
+          fontSize={['.8rem', '1rem']}
+          color={
+            Math.floor((100 * goal?.daysCompleted - goal?.reports.length) / goal?.days) === 100 &&
+            'gray.400'
+          }
+        >
           {days < 9999 ? days : days < 99999 ? Math.floor(days / 30) : Math.floor(days / 365)}
         </Text>
-        <Text fontSize={['.5rem', '.7rem']}>
+        <Text
+          fontSize={['.5rem', '.7rem']}
+          color={
+            Math.floor((100 * goal?.daysCompleted - goal?.reports.length) / goal?.days) === 100 &&
+            'gray.400'
+          }
+        >
           {days < 9999 ? 'dias' : days < 99999 ? 'meses' : 'anos'}
         </Text>
       </Flex>
       <Flex width="100%">
-        <Text fontSize={['0.8rem', '.8rem']}>
+        <Text
+          fontSize={['0.8rem', '.8rem']}
+          textDecoration={
+            Math.floor((100 * goal?.daysCompleted - goal?.reports.length) / goal?.days) === 100 &&
+            'line-through'
+          }
+          color={
+            Math.floor((100 * goal?.daysCompleted - goal?.reports.length) / goal?.days) === 100 &&
+            'gray.400'
+          }
+        >
           {description.length > 20 ? `${description.slice(0, 20)}...` : description}
         </Text>
       </Flex>
       <Flex>
-        <CheckIcon color={selectedGoal?.ref === goal?.ref ? 'pink.900' : 'pink.600'} />
+        {Math.floor((100 * goal?.daysCompleted - goal?.reports.length) / goal?.days) === 100 ? (
+          '🎉'
+        ) : (
+          <CheckIcon color={selectedGoal?.ref === goal?.ref ? 'pink.900' : 'pink.600'} />
+        )}
       </Flex>
     </Grid>
   );

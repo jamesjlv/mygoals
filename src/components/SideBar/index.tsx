@@ -133,7 +133,12 @@ export function SideBar({ goals, onOpen, closeMobile }: SideBarProps) {
             </Text>
           </Flex>
         </Flex>
-        <ChakraButton bg="gray.800" fontSize={['.8rem', '.9rem']} onClick={() => signOut()}>
+        <ChakraButton
+          bg="gray.800"
+          fontSize={['.8rem', '.9rem']}
+          onClick={() => signOut()}
+          _hover={{ backgroundColor: 'gray.700' }}
+        >
           Sair
         </ChakraButton>
       </Flex>

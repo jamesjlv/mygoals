@@ -23,9 +23,9 @@ export function SignInButton({ provider }: SignInButtonProps) {
 
   return (
     <Button
-      bg="gray.700"
+      bg="gray.800"
       _hover={{
-        background: 'gray.700',
+        background: 'gray.800',
         filter: 'brightness(0.9)',
         transition: 'filter .2s ease-in-out',
       }}
@@ -35,7 +35,7 @@ export function SignInButton({ provider }: SignInButtonProps) {
       {loading || session?.user ? (
         <Spinner />
       ) : (
-        <Flex fontSize={['.8rem', '1rem']}>
+        <Flex fontSize={['.8rem', '.9rem']}>
           {provider === 'Google' && <FcGoogle style={{ marginRight: '1rem' }} />}
           <a>Acesse com {provider}</a>
         </Flex>

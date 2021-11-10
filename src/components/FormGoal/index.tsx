@@ -63,7 +63,7 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
   const toast = useToast();
   const [stateForm, setStateForm] = useState(false);
   const [formGoal, setFormGoal] = useState<SelectedGoalData>({} as SelectedGoalData);
-
+  const [isDeleting, setIsDeleting] = useState(false);
   const {
     register,
     handleSubmit,
@@ -118,6 +118,13 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
   useEffect(() => {
     setFormGoal(selectedGoal);
   }, [selectedGoal]);
+
+  async function handleDeleteGoal() {
+    setIsDeleting(true);
+    const goalDeleted = { ref: selectedGoal.ref };
+    await api.delete('/api/goal', { data: goalDeleted });
+    setIsDeleting(false);
+  }
 
   return (
     <Modal isOpen={isOpen} onClose={handleResetForm}>
@@ -208,6 +215,11 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
               isLoading={stateForm}
             />
           </Flex>
+          {selectedGoal?.ref && (
+            <Flex as="form" onSubmit={handleDeleteGoal} marginBottom="1rem">
+              <Button description="Deletar" color="gray.700" width="100%" isLoading={isDeleting} />
+            </Flex>
+          )}
         </ModalBody>
       </ModalContent>
     </Modal>
