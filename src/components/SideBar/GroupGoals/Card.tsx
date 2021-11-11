@@ -23,7 +23,6 @@ export function Card({ goal, closeMenu }: CardProps) {
   const { selectedGoal, handleGoalsData } = useContext(GoalsContext);
   const isMobile = useBreakpointValue({ base: true, md: true, lg: true, xl: false });
   const { days, description } = goal;
-  console.log(goal);
   return (
     <Grid
       templateColumns="20% 1fr 20%"

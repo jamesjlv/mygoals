@@ -170,9 +170,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         await fauna.query(
           q.Delete(q.Select('ref', q.Get(q.Match(q.Index('goals_reports_by_goal_ref'), ref))))
         );
-      } catch (error) {
-        console.log('Não há reports');
-      }
+      } catch (error) {}
     } catch (error) {
       res.setHeader('Error', 'the website cannot delete the goal');
       res.status(405).end('Error when updating the goal');

@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useState } from 'react';
-import { getSession, useSession } from 'next-auth/client';
+import { useSession } from 'next-auth/client';
 import { SyncUserGoals } from '../services/SyncUserGoals';
 
 interface GoalsContextProps {

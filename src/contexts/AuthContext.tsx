@@ -79,15 +79,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
   async function userHasToken(email: string, token = null) {
     try {
       const response = await fauna.query(q.Get(q.Match(q.Index('auth_by_email'), email)));
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   }
 
   async function signIn({ email, password }: SignInCredentials) {
     try {
-      console.log(process.env.FAUNADB_KEY);
       const response = await fauna.query<FaunaInterfaceResponse>(
         q.Get(q.Match(q.Index('users_by_email'), q.Casefold(email)))
       );
@@ -95,7 +91,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const passwordIsVerified = await passwordVerified(password, passwordDb);
 
       if (!passwordIsVerified) {
-        console.log('Senha incorreta');
         return 'Error';
       }
 

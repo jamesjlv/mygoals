@@ -171,6 +171,11 @@ export const SyncUserGoals = async (session: SyncUserGoalsProps) => {
           q.Lambda('X', q.Get(q.Var('X')))
         )
       );
+
+      if (goals.data.length === 0) {
+        return {} as GoalsDataReturn;
+      }
+
       const category = await fauna.query<CategoryData>(
         q.Map(
           q.Paginate(q.Match(q.Index('category_by_user_email'), user.data.email)),
@@ -183,6 +188,7 @@ export const SyncUserGoals = async (session: SyncUserGoalsProps) => {
           q.Lambda('X', q.Get(q.Var('X')))
         )
       );
+
       const goalsFormatted = await formattedGoals({ goals, category, goalsReports });
 
       return goalsFormatted;

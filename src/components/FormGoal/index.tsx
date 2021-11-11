@@ -141,7 +141,7 @@ export function FormGoal({ isOpen, handleClose, initialData }: FormGoalProps) {
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={handleResetForm}>
+    <Modal isOpen={isOpen} onClose={handleResetForm} autoFocus={false}>
       <ModalOverlay />
       <ModalContent bg="gray.800" width={['90%', '100%']}>
         <ModalHeader

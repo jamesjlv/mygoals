@@ -31,7 +31,7 @@ export function Search({ filter }: SearchProps) {
           borderColor="gray.700"
           placeholder="Buscar uma meta..."
           paddingLeft="3rem"
-          fontSize={['.8rem', '1rem']}
+          fontSize={['1rem', '1rem']}
           _focus={{ borderColor: theme.colors.pink[600] }}
           onChange={(e) => filter(e.target.value)}
         />
